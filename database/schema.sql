@@ -16,7 +16,7 @@ CREATE TABLE "public"."users" (
 CREATE TABLE "public"."runs" (
   "runId" serial PRIMARY KEY,
   "userId" integer NOT NULL,
-  "distanceRun" text NOT NULL,
+  "distanceRan" text NOT NULL,
   "runDuration" integer NOT NULL,
   "averageHeartRate" integer NOT NULL,
   "runDate" text NOT NULL,
