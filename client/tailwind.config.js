@@ -6,7 +6,9 @@ export default {
     container: {
       center: true,
       padding: '2rem',
-      border: '2px solid rgb(171, 212, 130)',
+    },
+    colors: {
+      'light-green': '#ABD482',
     },
   },
   plugins: [],
