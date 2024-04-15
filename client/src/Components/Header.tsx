@@ -4,7 +4,9 @@ import './Header.css';
 export function Header() {
   return (
     <>
-      <h1>Hello</h1>
+      <header className="h-16 grid place-items-center">
+        <h1 className="satisfy-regular">Runners High</h1>
+      </header>
       <Outlet />
     </>
   );
