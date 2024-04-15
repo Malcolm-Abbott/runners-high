@@ -59,14 +59,9 @@ app.get('/api/hello', (req, res) => {
 
 app.post('/api/runs', async (req, res, next) => {
   try {
-    const {
-      userId,
-      distanceRan,
-      runDuration,
-      averageHeartRate,
-      photoUrl,
-      runDate,
-    } = req.body;
+    const userId = 1;
+    const { distanceRan, runDuration, averageHeartRate, photoUrl, runDate } =
+      req.body;
     validatePost(distanceRan, runDuration, averageHeartRate, photoUrl, runDate);
     const sql = `
       insert into "runs" ("userId", "distanceRan", "runDuration", "averageHeartRate", "photoUrl", "runDate")
@@ -74,7 +69,7 @@ app.post('/api/runs', async (req, res, next) => {
         returning *;
     `;
     const params = [
-      userId as string,
+      userId as number,
       distanceRan as string,
       runDuration as string,
       averageHeartRate as string,

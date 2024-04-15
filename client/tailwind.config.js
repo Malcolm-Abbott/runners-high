@@ -9,6 +9,7 @@ export default {
     },
     colors: {
       'light-green': '#ABD482',
+      'dark-green': '#6FAB3D',
     },
   },
   plugins: [],

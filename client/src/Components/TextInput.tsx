@@ -2,7 +2,7 @@ type Props = {
   label: string;
 };
 
-export function Label({ label }: Props) {
+export function TextInput({ label }: Props) {
   return (
     <label>
       <span className="px-1 font-medium">{label}</span>
