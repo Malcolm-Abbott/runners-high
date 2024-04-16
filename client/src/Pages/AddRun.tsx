@@ -8,10 +8,12 @@ import { useState } from 'react';
 import { FormEvent } from 'react';
 import { addRun } from '../lib/fetch';
 import { type Run } from '../lib/fetch';
+import { useNavigate } from 'react-router-dom';
 
 export function AddRun() {
   const [url, setUrl] = useState('/public/placeholderRH.jpg');
   const [runs, setRuns] = useState<Run[]>([]);
+  const navigate = useNavigate();
 
   function handleSelect(e: FormEvent<HTMLSelectElement>) {
     const { value } = e.target as HTMLSelectElement;
@@ -49,6 +51,7 @@ export function AddRun() {
       };
       const newRun = await addRun(runInfo);
       setRuns([...runs, newRun]);
+      navigate('/runs');
     } catch (err) {
       console.error(err);
     }

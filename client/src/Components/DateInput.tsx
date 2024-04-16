@@ -5,7 +5,7 @@ export function DateInput() {
       <div className="my-1">
         <input
           type="date"
-          name="dateRan"
+          name="runDate"
           className="h-12 border-2 border-solid border-light-green rounded-lg w-96 px-2"
         />
       </div>
