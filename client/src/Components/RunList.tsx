@@ -40,9 +40,11 @@ function Run({ run }: RunProps) {
         <p className="font-bold underline px-4">Date</p>
         <p className="font-medium px-5">{runDate}</p>
       </div>
-      <span className="px-1 font-medium">Photo</span>
-      <div className="border-2 border-solid border-light-green rounded-lg w-96">
-        <img className="rounded-lg" src={photoUrl} />
+      <div>
+        <span className="px-2 font-medium">Photo</span>
+        <div className="border-2 border-solid border-light-green rounded-lg w-96">
+          <img className="rounded-md" src={photoUrl} />
+        </div>
       </div>
       <div className="w-96 flex justify-between">
         <Button text="Edit Run" />
