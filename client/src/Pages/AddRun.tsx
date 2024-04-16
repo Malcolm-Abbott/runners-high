@@ -3,16 +3,15 @@ import { FormImage } from '../Components/FormImage';
 import { Select } from '../Components/Select';
 import { Button } from '../Components/Button';
 import { DateInput } from '../Components/DateInput';
+import { Heading } from '../Components/Heading';
 import { beachUrl, trackUrl, trailUrl, treadmillUrl } from '../lib/locations';
-import { useState } from 'react';
-import { FormEvent } from 'react';
+import { useState, FormEvent } from 'react';
 import { addRun } from '../lib/fetch';
 import { type Run } from '../lib/fetch';
 import { useNavigate } from 'react-router-dom';
 
 export function AddRun() {
   const [url, setUrl] = useState('/public/placeholderRH.jpg');
-  const [runs, setRuns] = useState<Run[]>([]);
   const navigate = useNavigate();
 
   function handleSelect(e: FormEvent<HTMLSelectElement>) {
@@ -49,8 +48,7 @@ export function AddRun() {
         photoUrl: url,
         runDate: String(runDate),
       };
-      const newRun = await addRun(runInfo);
-      setRuns([...runs, newRun]);
+      await addRun(runInfo);
       navigate('/runs');
     } catch (err) {
       console.error(err);
@@ -60,7 +58,7 @@ export function AddRun() {
   return (
     <form onSubmit={handleSubmit}>
       <div className="container grid place-items-center gap-8 my-8">
-        <h1 className="text-center font-semibold text-2xl">New Run</h1>
+        <Heading title="New Run" />
         <TextInput label="Distance Ran" category="distanceRan" />
         <TextInput label="Run Duration" category="runDuration" />
         <TextInput label="Average Heart Rate" category="averageHeartRate" />
