@@ -1,4 +1,4 @@
-type Run = {
+export type Run = {
   distanceRan: string;
   runDuration: number;
   averageHeartRate: number;
@@ -13,10 +13,11 @@ export async function addRun(run: Run) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(run)
+      body: JSON.stringify(run),
     });
     if (!res.ok) throw new Error('Response connection not OK');
     const data = await res.json();
+    return data;
   } catch (err) {
     console.error(err);
   }

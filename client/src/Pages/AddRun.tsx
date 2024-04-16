@@ -6,9 +6,12 @@ import { DateInput } from '../Components/DateInput';
 import { beachUrl, trackUrl, trailUrl, treadmillUrl } from '../lib/locations';
 import { useState } from 'react';
 import { FormEvent } from 'react';
+import { addRun } from '../lib/fetch';
+import { type Run } from '../lib/fetch';
 
 export function AddRun() {
   const [url, setUrl] = useState('/public/placeholderRH.jpg');
+  const [runs, setRuns] = useState<Run[]>([]);
 
   function handleSelect(e: FormEvent<HTMLSelectElement>) {
     const { value } = e.target as HTMLSelectElement;
@@ -30,12 +33,25 @@ export function AddRun() {
     }
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const { currentTarget } = e;
-    const formData = new FormData(currentTarget);
-    console.log(Object.fromEntries(formData));
-
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    try {
+      e.preventDefault();
+      const { currentTarget } = e;
+      const formData = new FormData(currentTarget);
+      const { distanceRan, runDuration, averageHeartRate, runDate } =
+        Object.fromEntries(formData);
+      const runInfo: Run = {
+        distanceRan: String(distanceRan),
+        runDuration: +runDuration,
+        averageHeartRate: +averageHeartRate,
+        photoUrl: url,
+        runDate: String(runDate),
+      };
+      const newRun = await addRun(runInfo);
+      setRuns([...runs, newRun]);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   return (
@@ -46,7 +62,7 @@ export function AddRun() {
         <TextInput label="Run Duration" category="runDuration" />
         <TextInput label="Average Heart Rate" category="averageHeartRate" />
         <FormImage imgUrl={url} />
-        <Select onSelectChange={handleSelect}/>
+        <Select onSelectChange={handleSelect} />
         <DateInput />
         <Button text="Log Run" />
       </div>
