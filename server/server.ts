@@ -57,6 +57,20 @@ app.get('/api/hello', (req, res) => {
   res.json({ message: 'Hello, World!' });
 });
 
+app.get('/api/runs', async (req, res, next) => {
+  try {
+    const sql = `
+      select *
+        from "runs"
+        order by "runId" desc;
+    `;
+    const result = await db.query<Run>(sql);
+    res.json(result.rows);
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.post('/api/runs', async (req, res, next) => {
   try {
     const userId = 1;

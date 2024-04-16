@@ -4,6 +4,7 @@ export type Run = {
   averageHeartRate: number;
   photoUrl: string;
   runDate: string;
+  runId?: number;
 };
 
 export async function addRun(run: Run) {
