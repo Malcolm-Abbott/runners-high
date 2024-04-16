@@ -7,3 +7,10 @@ export function dateToString(runDate: string) {
   );
   return date.toDateString();
 }
+
+export function minutesToHours(minutes: number) {
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  const time = `${hours}:${mins}`;
+  return time;
+}

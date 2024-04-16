@@ -1,6 +1,6 @@
 import { Button } from './Button';
 import type { Run } from '../lib/fetch';
-import { dateToString } from '../lib/date';
+import { dateToString, minutesToHours } from '../lib/conversions';
 
 type Props = {
   userRuns: Run[];
@@ -34,7 +34,7 @@ function Run({ run }: RunProps) {
       </div>
       <div className="h-20 border-2 border-solid border-light-green rounded-lg w-96 px-2 grid content-center">
         <p className="font-bold underline px-4">Run Duration</p>
-        <p className="font-medium px-5">{runDuration}</p>
+        <p className="font-medium px-5">{minutesToHours(runDuration)}</p>
       </div>
       <div className="h-20 border-2 border-solid border-light-green rounded-lg w-96 px-2 grid content-center">
         <p className="font-bold underline px-4">Average Heart Rate</p>
