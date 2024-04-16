@@ -1,5 +1,6 @@
 import { Button } from './Button';
 import type { Run } from '../lib/fetch';
+import { dateToString } from '../lib/date';
 
 type Props = {
   userRuns: Run[];
@@ -7,7 +8,7 @@ type Props = {
 
 export function RunList({ userRuns }: Props) {
   return (
-    <ul>
+    <ul className="grid gap-8">
       {userRuns.map((run) => (
         <Run run={run} key={run.runId} />
       ))}
@@ -23,7 +24,10 @@ function Run({ run }: RunProps) {
   const { distanceRan, runDuration, averageHeartRate, photoUrl, runDate } = run;
 
   return (
-    <li className="container grid place-items-center gap-8 my-8 px-36 py-8">
+    <li className="container grid place-items-center gap-8 my-8 px-36 py-8 shadow-lg rounded-lg">
+      <h1 className="text-center font-semibold text-2xl">
+        {dateToString(runDate)}
+      </h1>
       <div className="h-20 border-2 border-solid border-light-green rounded-lg w-96 px-2 grid content-center">
         <p className="font-bold underline px-4">Distance Ran</p>
         <p className="font-medium px-5">{distanceRan}</p>
@@ -36,12 +40,8 @@ function Run({ run }: RunProps) {
         <p className="font-bold underline px-4">Average Heart Rate</p>
         <p className="font-medium px-5">{averageHeartRate}</p>
       </div>
-      <div className="h-20 border-2 border-solid border-light-green rounded-lg w-96 px-2 grid content-center">
-        <p className="font-bold underline px-4">Date</p>
-        <p className="font-medium px-5">{runDate}</p>
-      </div>
       <div>
-        <span className="px-2 font-medium">Photo</span>
+        <span className="px-2 font-bold">Photo</span>
         <div className="border-2 border-solid border-light-green rounded-lg w-96">
           <img className="rounded-md" src={photoUrl} />
         </div>
