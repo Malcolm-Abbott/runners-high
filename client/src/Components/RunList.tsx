@@ -2,26 +2,39 @@ import { Button } from './Button';
 import type { Run } from '../lib/fetch';
 import { dateToString, minutesToHours } from '../lib/conversions';
 import { LinkButton } from './LinkButton';
+import { Modal } from './Modal';
+import { useState } from 'react';
 
 type Props = {
   userRuns: Run[];
+  updateRuns: (arg1: Run[]) => void;
 };
 
-export function RunList({ userRuns }: Props) {
+export function RunList({ userRuns, updateRuns }: Props) {
+  const [isActive, setIsActive] = useState(false);
+  console.log('isActive:', isActive);
   return (
-    <ul className="grid gap-8">
-      {userRuns.map((run) => (
-        <Run run={run} key={run.runId} />
-      ))}
-    </ul>
+    <>
+      <ul className="grid gap-8">
+        {userRuns.map((run) => (
+          <Run run={run} key={run.runId} setActive={setIsActive} />
+        ))}
+      </ul>
+      <Modal
+        isOpen={isActive}
+        onClose={() => setIsActive(false)}
+        updateRuns={updateRuns}
+      />
+    </>
   );
 }
 
 type RunProps = {
   run: Run;
+  setActive: (arg1: boolean) => void;
 };
 
-function Run({ run }: RunProps) {
+function Run({ run, setActive }: RunProps) {
   const {
     distanceRan,
     runDuration,
@@ -30,6 +43,15 @@ function Run({ run }: RunProps) {
     runDate,
     runId,
   } = run;
+
+  function deleteHandler() {
+    setActive(true);
+    try {
+      setActive(true);
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   return (
     <li className="container grid place-items-center gap-8 my-8 px-36 py-8 shadow-lg rounded-lg">
@@ -56,7 +78,7 @@ function Run({ run }: RunProps) {
       </div>
       <div className="w-96 flex justify-between">
         <LinkButton text="Edit Run" idRun={runId} />
-        <Button text="Delete Run" />
+        <Button text="Delete Run" onDeleteClick={deleteHandler} />
       </div>
     </li>
   );
