@@ -1,5 +1,6 @@
 type Props = {
-  imgUrl: string;
+  imgUrl: string | undefined;
+  // val?: string | undefined;
 };
 
 export function FormImage({ imgUrl }: Props) {

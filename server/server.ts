@@ -48,6 +48,26 @@ app.get('/api/runs', async (req, res, next) => {
   }
 });
 
+app.get('/api/runs/:runId', async (req, res, next) => {
+  try {
+    const { runId } = req.params;
+    if (!Number.isInteger(+runId) || +runId < 1)
+      throw new ClientError(400, 'runId must be a positive integer');
+    const sql = `
+      select *
+        from "runs"
+        where "runId" = $1;
+    `;
+    const params = [runId];
+    const result = await db.query(sql, params);
+    const [run] = result.rows;
+    if (!run) throw new ClientError(404, `Run ${runId} not found`);
+    res.status(200).json(run);
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.post('/api/runs', async (req, res, next) => {
   try {
     const userId = 1;
