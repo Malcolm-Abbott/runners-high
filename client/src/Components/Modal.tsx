@@ -25,11 +25,11 @@ export function Modal({ isOpen, onClose }: Props) {
         if (e.key === 'Escape') onClose();
       }}
       className="rounded-lg shadow-lg">
-      <div className="h-96 min-w-96 gap-8 grid place-content-center">
-        <h1 className="text-center font-medium text-lg">
+      <div className="h-96 min-w-96 gap-16 grid place-content-center">
+        <h1 className="text-center font-medium text-xl">
           Would you like to delete your run?
         </h1>
-        <div>
+        <div className="flex justify-between  min-w-96 mx-24">
           <button
             type="button"
             className="bg-light-green border-2 border-solid border-light-green rounded-lg h-12 w-40 shadow-md ring-2 ring-dark-green font-medium"
