@@ -83,6 +83,25 @@ app.put('/api/runs/:runId', async (req, res, next) => {
     const { distanceRan, runDuration, averageHeartRate, photoUrl, runDate } =
       req.body;
     validatePost(distanceRan, runDuration, averageHeartRate, photoUrl, runDate);
+    const sql = `
+      update "runs"
+        set "distanceRan" = $1,
+            "runDuration" = $2,
+            "averageHeartRate" = $3,
+            "photoUrl" = $4,
+            "runDate" = $5
+        where "runId" = $6;
+    `;
+    const params = [
+      distanceRan,
+      runDuration,
+      averageHeartRate,
+      photoUrl,
+      runDate,
+      runId,
+    ];
+    await db.query(sql, params);
+    res.sendStatus(200);
   } catch (err) {
     next(err);
   }
