@@ -1,6 +1,7 @@
 import { Button } from './Button';
 import type { Run } from '../lib/fetch';
 import { dateToString, minutesToHours } from '../lib/conversions';
+import { LinkButton } from './LinkButton';
 
 type Props = {
   userRuns: Run[];
@@ -21,7 +22,14 @@ type RunProps = {
 };
 
 function Run({ run }: RunProps) {
-  const { distanceRan, runDuration, averageHeartRate, photoUrl, runDate } = run;
+  const {
+    distanceRan,
+    runDuration,
+    averageHeartRate,
+    photoUrl,
+    runDate,
+    runId,
+  } = run;
 
   return (
     <li className="container grid place-items-center gap-8 my-8 px-36 py-8 shadow-lg rounded-lg">
@@ -47,7 +55,7 @@ function Run({ run }: RunProps) {
         </div>
       </div>
       <div className="w-96 flex justify-between">
-        <Button text="Edit Run" />
+        <LinkButton text="Edit Run" idRun={runId} />
         <Button text="Delete Run" />
       </div>
     </li>

@@ -7,14 +7,7 @@ import {
   defaultMiddleware,
   errorMiddleware,
 } from './lib/index.js';
-
-type Run = {
-  distanceRan: string;
-  runDuration: number;
-  averageHeartRate: number;
-  photoUrl: string;
-  runDate: string;
-};
+import { type Run, validatePost } from './lib/requests.js';
 
 const connectionString =
   process.env.DATABASE_URL ||
@@ -25,22 +18,6 @@ const db = new pg.Pool({
     rejectUnauthorized: false,
   },
 });
-
-function validatePost(
-  distanceRan: Run,
-  runDuration: Run,
-  averageHeartRate: Run,
-  photoUrl: Run,
-  runDate: Run
-): void {
-  if (!Number.isInteger(+runDuration) || !Number.isInteger(+averageHeartRate))
-    throw new ClientError(
-      400,
-      'runDuration and averageHeartRate must be numbers'
-    );
-  if (!distanceRan || !photoUrl || !runDate)
-    throw new ClientError(400, 'All required input fields not completed');
-}
 
 const app = express();
 
@@ -93,6 +70,19 @@ app.post('/api/runs', async (req, res, next) => {
     const result = await db.query<Run>(sql, params);
     const [run] = result.rows;
     res.status(201).json(run);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.put('/api/runs/:runId', async (req, res, next) => {
+  try {
+    const { runId } = req.params;
+    if (!Number.isInteger(+runId) || +runId < 1)
+      throw new ClientError(400, 'runId must be a positive integer');
+    const { distanceRan, runDuration, averageHeartRate, photoUrl, runDate } =
+      req.body;
+    validatePost(distanceRan, runDuration, averageHeartRate, photoUrl, runDate);
   } catch (err) {
     next(err);
   }
