@@ -23,3 +23,18 @@ export async function addRun(run: Run) {
     console.error(err);
   }
 }
+
+export async function editRun(run: Run, runId) {
+  try {
+    const res = await fetch(`/api/runs/${runId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(run),
+    });
+    if (!res.ok) throw new Error('Response connection not OK');
+  } catch (err) {
+    console.error(err);
+  }
+}

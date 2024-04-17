@@ -7,14 +7,7 @@ import {
   defaultMiddleware,
   errorMiddleware,
 } from './lib/index.js';
-
-type Run = {
-  distanceRan: string;
-  runDuration: number;
-  averageHeartRate: number;
-  photoUrl: string;
-  runDate: string;
-};
+import { type Run, validatePost } from './lib/requests.js';
 
 const connectionString =
   process.env.DATABASE_URL ||
@@ -25,22 +18,6 @@ const db = new pg.Pool({
     rejectUnauthorized: false,
   },
 });
-
-function validatePost(
-  distanceRan: Run,
-  runDuration: Run,
-  averageHeartRate: Run,
-  photoUrl: Run,
-  runDate: Run
-): void {
-  if (!Number.isInteger(+runDuration) || !Number.isInteger(+averageHeartRate))
-    throw new ClientError(
-      400,
-      'runDuration and averageHeartRate must be numbers'
-    );
-  if (!distanceRan || !photoUrl || !runDate)
-    throw new ClientError(400, 'All required input fields not completed');
-}
 
 const app = express();
 
@@ -71,6 +48,26 @@ app.get('/api/runs', async (req, res, next) => {
   }
 });
 
+app.get('/api/runs/:runId', async (req, res, next) => {
+  try {
+    const { runId } = req.params;
+    if (!Number.isInteger(+runId) || +runId < 1)
+      throw new ClientError(400, 'runId must be a positive integer');
+    const sql = `
+      select *
+        from "runs"
+        where "runId" = $1;
+    `;
+    const params = [runId];
+    const result = await db.query(sql, params);
+    const [run] = result.rows;
+    if (!run) throw new ClientError(404, `Run ${runId} not found`);
+    res.status(200).json(run);
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.post('/api/runs', async (req, res, next) => {
   try {
     const userId = 1;
@@ -93,6 +90,38 @@ app.post('/api/runs', async (req, res, next) => {
     const result = await db.query<Run>(sql, params);
     const [run] = result.rows;
     res.status(201).json(run);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.put('/api/runs/:runId', async (req, res, next) => {
+  try {
+    const { runId } = req.params;
+    if (!Number.isInteger(+runId) || +runId < 1)
+      throw new ClientError(400, 'runId must be a positive integer');
+    const { distanceRan, runDuration, averageHeartRate, photoUrl, runDate } =
+      req.body;
+    validatePost(distanceRan, runDuration, averageHeartRate, photoUrl, runDate);
+    const sql = `
+      update "runs"
+        set "distanceRan" = $1,
+            "runDuration" = $2,
+            "averageHeartRate" = $3,
+            "photoUrl" = $4,
+            "runDate" = $5
+        where "runId" = $6;
+    `;
+    const params = [
+      distanceRan,
+      runDuration,
+      averageHeartRate,
+      photoUrl,
+      runDate,
+      runId,
+    ];
+    await db.query(sql, params);
+    res.sendStatus(200);
   } catch (err) {
     next(err);
   }
