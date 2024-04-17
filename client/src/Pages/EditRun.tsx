@@ -6,7 +6,7 @@ import { DateInput } from '../Components/DateInput';
 import { Heading } from '../Components/Heading';
 import { beachUrl, trackUrl, trailUrl, treadmillUrl } from '../lib/locations';
 import { useState, useEffect, FormEvent } from 'react';
-import { addRun } from '../lib/fetch';
+import { editRun } from '../lib/fetch';
 import { type Run } from '../lib/fetch';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -69,7 +69,7 @@ export function EditRun() {
         photoUrl: url,
         runDate: String(runDate),
       };
-      await addRun(runInfo);
+      await editRun(runInfo, runId);
       navigate('/runs');
     } catch (err) {
       console.error(err);
@@ -99,8 +99,8 @@ export function EditRun() {
           val={run?.averageHeartRate}
         />
         <FormImage imgUrl={url} />
-        <Select onSelectChange={handleSelect} />
-        <DateInput />
+        <Select onSelectChange={handleSelect} val={url} />
+        <DateInput val={run?.runDate} />
         <Button text="Log Run" />
       </div>
     </form>
