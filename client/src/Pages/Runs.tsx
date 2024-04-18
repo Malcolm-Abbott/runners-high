@@ -40,7 +40,7 @@ export function Runs() {
   return (
     <div className="container grid place-items-center my-8">
       <Heading title="Your Runs" />
-      <RunList userRuns={runs} />
+      <RunList userRuns={runs} updateRuns={setRuns} />
     </div>
   );
 }

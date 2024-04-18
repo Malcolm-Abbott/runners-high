@@ -127,6 +127,27 @@ app.put('/api/runs/:runId', async (req, res, next) => {
   }
 });
 
+app.delete('/api/runs', async (req, res, next) => {
+  try {
+    const { runId } = req.body;
+    if (!Number.isInteger(+runId) || +runId < 1)
+      throw new ClientError(400, 'runId must be a positive integer');
+    const sql = `
+      delete
+        from "runs"
+        where "runId" = $1
+        returning *;
+    `;
+    const params = [runId];
+    const result = await db.query(sql, params);
+    const [deletedRun] = result.rows;
+    if (!deletedRun) throw new ClientError(404, `Run ${runId} not found`);
+    res.sendStatus(204);
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.use(defaultMiddleware(reactStaticDir));
 
 app.use(errorMiddleware);
