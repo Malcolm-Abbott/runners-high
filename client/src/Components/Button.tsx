@@ -9,7 +9,7 @@ export function Button({ text, onDeleteClick }: Props) {
     <button
       onClick={onDeleteClick}
       type="submit"
-      className="bg-light-green border-2 border-solid border-light-green rounded-lg h-12 w-40 shadow-md ring-2 ring-dark-green font-medium">
+      className="bg-light-green border-2 border-solid border-light-green rounded-lg h-12 w-40 shadow-xl ring-2 ring-dark-green font-medium">
       {text}
     </button>
   );

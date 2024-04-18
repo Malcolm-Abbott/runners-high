@@ -1,0 +1,25 @@
+import { Link } from 'react-router-dom';
+
+type Props = {
+  label: string;
+};
+
+export function UsernameInput({ label }: Props) {
+  return (
+    <label>
+      <div className="flex justify-between">
+        <span className="px-1 font-medium">{label}</span>
+        <Link to="/sign-up" className="px-1 font-medium cursor-pointer">
+          Continue As Guest
+        </Link>
+      </div>
+      <div className="my-1">
+        <input
+          type="text"
+          name="username"
+          className="h-12 border-2 border-solid border-light-green rounded-lg w-96 px-2"
+        />
+      </div>
+    </label>
+  );
+}
