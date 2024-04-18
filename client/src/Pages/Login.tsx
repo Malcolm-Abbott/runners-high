@@ -15,7 +15,7 @@ export function Login() {
           <Button text="Login" buttonType="submit" />
           <LinkButtonLogin text="Create Account" />
         </div>
-        <LoginImage />
+        <LoginImage url="/runners-high-bg.jpg" />
       </div>
     </form>
   );
