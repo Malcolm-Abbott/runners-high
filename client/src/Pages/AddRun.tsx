@@ -65,7 +65,7 @@ export function AddRun() {
         <FormImage imgUrl={url} />
         <Select onSelectChange={handleSelect} />
         <DateInput />
-        <Button text="Log Run" />
+        <Button text="Log Run" buttonType="submit" />
       </div>
     </form>
   );

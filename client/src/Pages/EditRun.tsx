@@ -101,7 +101,7 @@ export function EditRun() {
         <FormImage imgUrl={url} />
         <Select onSelectChange={handleSelect} val={url} />
         <DateInput val={run?.runDate} />
-        <Button text="Log Run" />
+        <Button text="Log Run" buttonType="submit" />
       </div>
     </form>
   );

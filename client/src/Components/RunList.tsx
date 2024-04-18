@@ -85,7 +85,11 @@ function Run({ run, setActive, setRunId, idRun }: RunProps) {
       </div>
       <div className="w-96 flex justify-between">
         <LinkButton text="Edit Run" idRun={runId} />
-        <Button text="Delete Run" onDeleteClick={deleteHandler} />
+        <Button
+          text="Delete Run"
+          buttonType="button"
+          onDeleteClick={deleteHandler}
+        />
       </div>
     </li>
   );
