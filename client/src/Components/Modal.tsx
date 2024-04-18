@@ -1,13 +1,15 @@
 import { useEffect, useRef } from 'react';
-import type { Run } from '../lib/fetch';
+import { deleteRun, type Run } from '../lib/fetch';
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   updateRuns: (arg1: Run[]) => void;
+  idRun: number | undefined;
+  userRuns: Run[] | undefined[];
 };
 
-export function Modal({ isOpen, onClose }: Props) {
+export function Modal({ isOpen, onClose, idRun, userRuns, updateRuns }: Props) {
   const modal = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -17,7 +19,22 @@ export function Modal({ isOpen, onClose }: Props) {
       modal.current?.showModal();
     }
   }, [isOpen]);
-  console.log('isOpen', isOpen);
+
+  async function confirmHandler() {
+    try {
+      await deleteRun(idRun);
+      const newRuns: Run[] = [];
+      userRuns.forEach((run) => {
+        if (run.runId !== idRun) newRuns.push(run);
+      });
+      updateRuns(newRuns);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      onClose();
+    }
+  }
+
   return (
     <dialog
       ref={modal}
@@ -39,7 +56,7 @@ export function Modal({ isOpen, onClose }: Props) {
           <button
             type="button"
             className="bg-light-green border-2 border-solid border-light-green rounded-lg h-12 w-40 shadow-md ring-2 ring-dark-green font-medium"
-            onClick={onClose}>
+            onClick={confirmHandler}>
             Confirm
           </button>
         </div>

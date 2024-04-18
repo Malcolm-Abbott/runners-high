@@ -38,3 +38,18 @@ export async function editRun(run: Run, runId) {
     console.error(err);
   }
 }
+
+export async function deleteRun(runId) {
+  try {
+    const res = await fetch('/api/runs', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ runId }),
+    });
+    if (!res.ok) throw new Error('Response connection not OK');
+  } catch (err) {
+    console.error(err);
+  }
+}

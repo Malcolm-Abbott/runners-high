@@ -1,6 +1,7 @@
 type Props = {
   text: string;
   onDeleteClick?: () => void;
+  idRun?: number | undefined;
 };
 
 export function Button({ text, onDeleteClick }: Props) {

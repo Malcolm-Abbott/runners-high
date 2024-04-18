@@ -12,18 +12,27 @@ type Props = {
 
 export function RunList({ userRuns, updateRuns }: Props) {
   const [isActive, setIsActive] = useState(false);
-  console.log('isActive:', isActive);
+  const [id, setId] = useState(0);
+
   return (
     <>
       <ul className="grid gap-8">
         {userRuns.map((run) => (
-          <Run run={run} key={run.runId} setActive={setIsActive} />
+          <Run
+            run={run}
+            key={run.runId}
+            setActive={setIsActive}
+            setRunId={setId}
+            idRun={run.runId}
+          />
         ))}
       </ul>
       <Modal
         isOpen={isActive}
         onClose={() => setIsActive(false)}
+        userRuns={userRuns}
         updateRuns={updateRuns}
+        idRun={id}
       />
     </>
   );
@@ -32,9 +41,11 @@ export function RunList({ userRuns, updateRuns }: Props) {
 type RunProps = {
   run: Run;
   setActive: (arg1: boolean) => void;
+  setRunId: (arg1: any) => void;
+  idRun: number | undefined;
 };
 
-function Run({ run, setActive }: RunProps) {
+function Run({ run, setActive, setRunId, idRun }: RunProps) {
   const {
     distanceRan,
     runDuration,
@@ -46,11 +57,7 @@ function Run({ run, setActive }: RunProps) {
 
   function deleteHandler() {
     setActive(true);
-    try {
-      setActive(true);
-    } catch (err) {
-      console.error(err);
-    }
+    setRunId(idRun);
   }
 
   return (
