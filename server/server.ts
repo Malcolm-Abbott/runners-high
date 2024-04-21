@@ -2,12 +2,21 @@
 import 'dotenv/config';
 import express from 'express';
 import pg from 'pg';
+import argon2 from 'argon2';
+import jwt from 'jsonwebtoken';
 import {
   ClientError,
   defaultMiddleware,
   errorMiddleware,
+  authMiddleware,
 } from './lib/index.js';
 import { type Run, validatePost } from './lib/requests.js';
+
+type User = {
+  userId: number;
+  username: string;
+  password: string;
+};
 
 const connectionString =
   process.env.DATABASE_URL ||
@@ -18,6 +27,9 @@ const db = new pg.Pool({
     rejectUnauthorized: false,
   },
 });
+
+const secret = process.env.TOKEN_SECRET;
+if (!secret) throw new Error('TOKEN_SECRET not found in .env');
 
 const app = express();
 
@@ -30,8 +42,24 @@ app.use(express.static(reactStaticDir));
 app.use(express.static(uploadsStaticDir));
 app.use(express.json());
 
-app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Hello, World!' });
+app.post('/api/sign-up', async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password)
+      throw new ClientError(400, 'username and password are required fields');
+    const hashedPassword = await argon2.hash(password);
+    const sql = `
+      insert into "users" ("username", "password")
+        values($1, $2)
+        returning "userId", "username", "created_at";
+    `;
+    const params = [username, hashedPassword];
+    const result = await db.query<User>(sql, params);
+    const [user] = result.rows;
+    res.status(201).json(user);
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.get('/api/runs', async (req, res, next) => {
