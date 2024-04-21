@@ -80,23 +80,6 @@ app.post('/api/sign-up', async (req, res, next) => {
   }
 });
 
-app.get('/api/users', async (req, res, next) => {
-  try {
-    const sql = `
-      select "username"
-        from "users";
-    `;
-    const result = await db.query(sql);
-    const names = result.rows;
-    const usernames = names.map((name) => {
-      return name.username;
-    });
-    console.log(usernames);
-  } catch (err) {
-    next(err);
-  }
-});
-
 app.post('/api/login', async (req, res, next) => {
   try {
     const { username, password } = req.body as Partial<Auth>;
