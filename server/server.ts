@@ -52,6 +52,19 @@ app.post('/api/sign-up', async (req, res, next) => {
     const { username, password } = req.body;
     if (!username || !password)
       throw new ClientError(400, 'username and password are required fields');
+
+    const usernameSql = `
+      select "username"
+        from "users";
+    `;
+    const usernameQuery = await db.query(usernameSql);
+    const usernameArray = usernameQuery.rows;
+    const unavailableUsernames = usernameArray.map((name) => {
+      return name.username;
+    });
+    const isFound = unavailableUsernames.find((name) => name === username);
+    if (isFound) throw new ClientError(409, 'username already exists');
+
     const hashedPassword = await argon2.hash(password);
     const sql = `
       insert into "users" ("username", "password")
@@ -62,6 +75,23 @@ app.post('/api/sign-up', async (req, res, next) => {
     const result = await db.query<User>(sql, params);
     const [user] = result.rows;
     res.status(201).json(user);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get('/api/users', async (req, res, next) => {
+  try {
+    const sql = `
+      select "username"
+        from "users";
+    `;
+    const result = await db.query(sql);
+    const names = result.rows;
+    const usernames = names.map((name) => {
+      return name.username;
+    });
+    console.log(usernames);
   } catch (err) {
     next(err);
   }

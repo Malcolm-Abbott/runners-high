@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Heading } from '../Components/Heading';
 import { LoginImage } from '../Components/LoginImage';
@@ -7,7 +7,6 @@ import { TextInput } from '../Components/TextInput';
 import { Button } from '../Components/Button';
 
 export function SignUp() {
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   async function handleSubmit(
@@ -15,7 +14,6 @@ export function SignUp() {
   ): Promise<void> {
     event.preventDefault();
     try {
-      setIsLoading(true);
       const formData = new FormData(event.currentTarget);
       const userData = Object.fromEntries(formData);
       const req = {
@@ -32,12 +30,8 @@ export function SignUp() {
       navigate('/');
     } catch (err) {
       alert(`Error registering user: ${err}`);
-    } finally {
-      setIsLoading(false);
     }
   }
-
-  if (isLoading) return <div>Loading...</div>;
 
   return (
     <form onSubmit={handleSubmit}>
