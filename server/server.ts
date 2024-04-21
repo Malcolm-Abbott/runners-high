@@ -18,6 +18,11 @@ type User = {
   password: string;
 };
 
+type Auth = {
+  username: string;
+  password: string;
+};
+
 const connectionString =
   process.env.DATABASE_URL ||
   `postgresql://${process.env.RDS_USERNAME}:${process.env.RDS_PASSWORD}@${process.env.RDS_HOSTNAME}:${process.env.RDS_PORT}/${process.env.RDS_DB_NAME}`;
@@ -57,6 +62,30 @@ app.post('/api/sign-up', async (req, res, next) => {
     const result = await db.query<User>(sql, params);
     const [user] = result.rows;
     res.status(201).json(user);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/api/login', async (req, res, next) => {
+  try {
+    const { username, password } = req.body as Partial<Auth>;
+    if (!username || !password) throw new ClientError(401, 'invalid login');
+    const sql = `
+      select "userId", "password"
+        from "users"
+        where "username" = $1;
+    `;
+    const params = [username];
+    const result = await db.query<User>(sql, params);
+    const [user] = result.rows;
+    if (!user) throw new ClientError(401, 'invalid login');
+    const { userId, password: hashedPassword } = user;
+    const isVerified = await argon2.verify(hashedPassword, password);
+    if (!isVerified) throw new ClientError(401, 'invalid login');
+    const payload = { userId, username };
+    const token = jwt.sign(payload, secret);
+    res.send({ user: payload, token });
   } catch (err) {
     next(err);
   }
