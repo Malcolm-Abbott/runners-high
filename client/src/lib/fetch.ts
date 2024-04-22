@@ -1,3 +1,5 @@
+import { readToken } from './tokens';
+
 export type Run = {
   distanceRan: string;
   runDuration: number;
@@ -13,6 +15,7 @@ export async function addRun(run: Run) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${readToken()}`,
       },
       body: JSON.stringify(run),
     });
@@ -30,6 +33,7 @@ export async function editRun(run: Run, runId) {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${readToken()}`,
       },
       body: JSON.stringify(run),
     });
@@ -45,6 +49,7 @@ export async function deleteRun(runId) {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${readToken()}`,
       },
       body: JSON.stringify({ runId }),
     });

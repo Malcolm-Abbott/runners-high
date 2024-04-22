@@ -104,21 +104,22 @@ app.post('/api/login', async (req, res, next) => {
   }
 });
 
-app.get('/api/runs', async (req, res, next) => {
+app.get('/api/runs', authMiddleware, async (req, res, next) => {
   try {
     const sql = `
       select *
         from "runs"
+        where "userId" = $1
         order by "runId" desc;
     `;
-    const result = await db.query<Run>(sql);
+    const result = await db.query<Run>(sql, [req.user?.userId]);
     res.json(result.rows);
   } catch (err) {
     next(err);
   }
 });
 
-app.get('/api/runs/:runId', async (req, res, next) => {
+app.get('/api/runs/:runId', authMiddleware, async (req, res, next) => {
   try {
     const { runId } = req.params;
     if (!Number.isInteger(+runId) || +runId < 1)
@@ -138,9 +139,9 @@ app.get('/api/runs/:runId', async (req, res, next) => {
   }
 });
 
-app.post('/api/runs', async (req, res, next) => {
+app.post('/api/runs', authMiddleware, async (req, res, next) => {
   try {
-    const userId = 1;
+    const userId = req.user?.userId;
     const { distanceRan, runDuration, averageHeartRate, photoUrl, runDate } =
       req.body;
     validatePost(distanceRan, runDuration, averageHeartRate, photoUrl, runDate);
@@ -165,7 +166,7 @@ app.post('/api/runs', async (req, res, next) => {
   }
 });
 
-app.put('/api/runs/:runId', async (req, res, next) => {
+app.put('/api/runs/:runId', authMiddleware, async (req, res, next) => {
   try {
     const { runId } = req.params;
     if (!Number.isInteger(+runId) || +runId < 1)
@@ -197,7 +198,7 @@ app.put('/api/runs/:runId', async (req, res, next) => {
   }
 });
 
-app.delete('/api/runs', async (req, res, next) => {
+app.delete('/api/runs', authMiddleware, async (req, res, next) => {
   try {
     const { runId } = req.body;
     if (!Number.isInteger(+runId) || +runId < 1)

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { type Run } from '../lib/fetch';
 import { Heading } from '../Components/Heading';
 import { RunList } from '../Components/RunList';
+import { readToken } from '../lib/tokens';
 
 export function Runs() {
   const [runs, setRuns] = useState<Run[]>([]);
@@ -12,7 +13,13 @@ export function Runs() {
     async function load() {
       try {
         setIsLoading(true);
-        const res = await fetch('/api/runs');
+        const req = {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${readToken()}`,
+          },
+        };
+        const res = await fetch('/api/runs', req);
         if (!res.ok) throw new Error('Response connection not OK');
         const result = await res.json();
         setRuns(result);

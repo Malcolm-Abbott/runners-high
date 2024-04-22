@@ -9,6 +9,7 @@ import { SignUp } from './Pages/SignUp';
 import { User, UserProvider } from './Components/UserContext';
 import { useState } from 'react';
 import { saveToken } from './lib/tokens';
+import { HeaderUser } from './Components/HeaderUser';
 
 export default function App() {
   const [user, setUser] = useState<User>();
@@ -32,7 +33,7 @@ export default function App() {
     <>
       <UserProvider value={contextValue}>
         <Routes>
-          <Route path="/" element={<Header />}>
+          <Route path="/" element={user ? <HeaderUser /> : <Header />}>
             <Route index element={<Login />} />
             <Route path="sign-up" element={<SignUp />} />
             <Route path="add" element={<AddRun />} />
