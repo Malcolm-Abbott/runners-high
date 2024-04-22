@@ -23,7 +23,7 @@ export default function App() {
     } catch (err) {
       console.error(err);
     }
-  });
+  }, []);
 
   function handleSignIn(user: User, token: string) {
     setUser(user);

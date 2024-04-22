@@ -6,8 +6,6 @@ import './Header.css';
 
 export function Header() {
   const { user, token, handleSignOut } = useUser();
-  console.log('user:', user);
-  console.log('token:', token);
 
   if (user || token)
     return (

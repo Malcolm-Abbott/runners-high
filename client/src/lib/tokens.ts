@@ -20,9 +20,9 @@ export function readToken(): string {
   return token;
 }
 
-export function readUser(): User {
+export function readUser(): User | undefined {
   const userJSON = sessionStorage.getItem(userKey);
-  if (!userJSON) throw new Error('No user found');
+  if (!userJSON) return;
   const user = JSON.parse(userJSON);
   return user;
 }
