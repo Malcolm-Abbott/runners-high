@@ -7,23 +7,35 @@ import { EditRun } from './Pages/EditRun';
 import { Login } from './Pages/Login';
 import { SignUp } from './Pages/SignUp';
 import { User, UserProvider } from './Components/UserContext';
-import { useState } from 'react';
-import { saveToken } from './lib/tokens';
-import { HeaderUser } from './Components/HeaderUser';
+import { useState, useEffect } from 'react';
+import { readToken, readUser, saveToken, saveUser } from './lib/tokens';
 
 export default function App() {
   const [user, setUser] = useState<User>();
   const [token, setToken] = useState<string>();
 
+  useEffect(() => {
+    try {
+      if (readUser() && readToken()) {
+        setUser(readUser());
+        setToken(readToken());
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  });
+
   function handleSignIn(user: User, token: string) {
     setUser(user);
     setToken(token);
+    saveUser(user);
     saveToken(token);
   }
 
   function handleSignOut() {
     setUser(undefined);
     setToken(undefined);
+    saveUser(undefined);
     saveToken(undefined);
   }
 
@@ -33,7 +45,7 @@ export default function App() {
     <>
       <UserProvider value={contextValue}>
         <Routes>
-          <Route path="/" element={user ? <HeaderUser /> : <Header />}>
+          <Route path="/" element={<Header />}>
             <Route index element={<Login />} />
             <Route path="sign-up" element={<SignUp />} />
             <Route path="add" element={<AddRun />} />

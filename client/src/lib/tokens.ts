@@ -1,4 +1,6 @@
 export const tokenKey = 'rh.token';
+export const userKey = 'rh.user';
+import type { User } from '../Components/UserContext';
 
 export function saveToken(token: string | undefined): void {
   token
@@ -6,8 +8,21 @@ export function saveToken(token: string | undefined): void {
     : sessionStorage.removeItem(tokenKey);
 }
 
+export function saveUser(user: User | undefined): void {
+  user
+    ? sessionStorage.setItem(userKey, JSON.stringify(user))
+    : sessionStorage.removeItem(userKey);
+}
+
 export function readToken(): string {
   const token = sessionStorage.getItem(tokenKey);
   if (!token) throw new Error('No token found');
   return token;
+}
+
+export function readUser(): User {
+  const userJSON = sessionStorage.getItem(userKey);
+  if (!userJSON) throw new Error('No user found');
+  const user = JSON.parse(userJSON);
+  return user;
 }

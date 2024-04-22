@@ -10,7 +10,10 @@ export default {
     colors: {
       'light-green': '#ABD482',
       'dark-green': '#6FAB3D',
+      'darker-green': '#5A8B29',
+      'very-dark-green': '#004400',
       'light-gray': '#F1EDED',
+      white: '#ffff',
     },
   },
   plugins: [],

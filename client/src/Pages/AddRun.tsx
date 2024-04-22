@@ -11,7 +11,7 @@ import { type Run } from '../lib/fetch';
 import { useNavigate } from 'react-router-dom';
 
 export function AddRun() {
-  const [url, setUrl] = useState('/public/placeholderRH.jpg');
+  const [url, setUrl] = useState('/placeholderRH.jpg');
   const navigate = useNavigate();
 
   function handleSelect(e: FormEvent<HTMLSelectElement>) {
@@ -30,7 +30,7 @@ export function AddRun() {
         setUrl(treadmillUrl());
         break;
       default:
-        setUrl('/public/placeholderRH.jpg');
+        setUrl('/placeholderRH.jpg');
     }
   }
 
