@@ -6,6 +6,6 @@
   box-sizing: border-box;
 }
 
-/* .container {
-  margin-top: 2rem;
-} */
+body {
+  margin: 0 auto;
+}
