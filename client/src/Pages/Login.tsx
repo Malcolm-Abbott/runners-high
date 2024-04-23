@@ -31,10 +31,28 @@ export function Login() {
     }
   }
 
+  async function guestLogin() {
+    try {
+      const userData = { username: 'guest', password: 'Guest1*Password2*' };
+      const req = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      };
+      const res = await fetch('/api/login', req);
+      if (!res.ok) throw new Error(`fetch Error: ${res.status}`);
+      const { user, token } = await res.json();
+      handleSignIn(user, token);
+      navigate('/runs');
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   return (
     <form onSubmit={submitHandler}>
       <div className="container grid place-items-center gap-8 my-8">
-        <UsernameInput />
+        <UsernameInput onClick={guestLogin} />
         <PasswordInput />
         <h1 className="text-lg font-semibold">Not a member? Sign up!</h1>
         <div className="w-96 flex justify-between">

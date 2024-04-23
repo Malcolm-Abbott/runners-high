@@ -1,9 +1,13 @@
-export function UsernameInput() {
+type Props = {
+  onClick: () => void;
+};
+
+export function UsernameInput({ onClick }: Props) {
   return (
     <label>
       <div className="flex justify-between">
         <span className="px-1 font-medium">Username</span>
-        <span className="px-1 font-medium cursor-pointer">
+        <span className="px-1 font-medium cursor-pointer" onClick={onClick}>
           Continue As Guest
         </span>
       </div>
