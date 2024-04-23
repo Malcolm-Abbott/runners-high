@@ -2,12 +2,26 @@
 import 'dotenv/config';
 import express from 'express';
 import pg from 'pg';
+import argon2 from 'argon2';
+import jwt from 'jsonwebtoken';
 import {
   ClientError,
   defaultMiddleware,
   errorMiddleware,
+  authMiddleware,
 } from './lib/index.js';
 import { type Run, validatePost } from './lib/requests.js';
+
+type User = {
+  userId: number;
+  username: string;
+  password: string;
+};
+
+type Auth = {
+  username: string;
+  password: string;
+};
 
 const connectionString =
   process.env.DATABASE_URL ||
@@ -18,6 +32,9 @@ const db = new pg.Pool({
     rejectUnauthorized: false,
   },
 });
+
+const secret = process.env.TOKEN_SECRET;
+if (!secret) throw new Error('TOKEN_SECRET not found in .env');
 
 const app = express();
 
@@ -30,25 +47,79 @@ app.use(express.static(reactStaticDir));
 app.use(express.static(uploadsStaticDir));
 app.use(express.json());
 
-app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Hello, World!' });
+app.post('/api/sign-up', async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password)
+      throw new ClientError(400, 'username and password are required fields');
+
+    const usernameSql = `
+      select "username"
+        from "users";
+    `;
+    const usernameQuery = await db.query(usernameSql);
+    const usernameArray = usernameQuery.rows;
+    const unavailableUsernames = usernameArray.map((name) => {
+      return name.username;
+    });
+    const isFound = unavailableUsernames.find((name) => name === username);
+    if (isFound) throw new ClientError(409, 'username already exists');
+
+    const hashedPassword = await argon2.hash(password);
+    const sql = `
+      insert into "users" ("username", "password")
+        values($1, $2)
+        returning "userId", "username", "created_at";
+    `;
+    const params = [username, hashedPassword];
+    const result = await db.query<User>(sql, params);
+    const [user] = result.rows;
+    res.status(201).json(user);
+  } catch (err) {
+    next(err);
+  }
 });
 
-app.get('/api/runs', async (req, res, next) => {
+app.post('/api/login', async (req, res, next) => {
+  try {
+    const { username, password } = req.body as Partial<Auth>;
+    if (!username || !password) throw new ClientError(401, 'invalid login');
+    const sql = `
+      select "userId", "password"
+        from "users"
+        where "username" = $1;
+    `;
+    const params = [username];
+    const result = await db.query<User>(sql, params);
+    const [user] = result.rows;
+    if (!user) throw new ClientError(401, 'invalid login');
+    const { userId, password: hashedPassword } = user;
+    const isVerified = await argon2.verify(hashedPassword, password);
+    if (!isVerified) throw new ClientError(401, 'invalid login');
+    const payload = { userId, username };
+    const token = jwt.sign(payload, secret);
+    res.send({ user: payload, token });
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get('/api/runs', authMiddleware, async (req, res, next) => {
   try {
     const sql = `
       select *
         from "runs"
+        where "userId" = $1
         order by "runId" desc;
     `;
-    const result = await db.query<Run>(sql);
+    const result = await db.query<Run>(sql, [req.user?.userId]);
     res.json(result.rows);
   } catch (err) {
     next(err);
   }
 });
 
-app.get('/api/runs/:runId', async (req, res, next) => {
+app.get('/api/runs/:runId', authMiddleware, async (req, res, next) => {
   try {
     const { runId } = req.params;
     if (!Number.isInteger(+runId) || +runId < 1)
@@ -68,9 +139,9 @@ app.get('/api/runs/:runId', async (req, res, next) => {
   }
 });
 
-app.post('/api/runs', async (req, res, next) => {
+app.post('/api/runs', authMiddleware, async (req, res, next) => {
   try {
-    const userId = 1;
+    const userId = req.user?.userId;
     const { distanceRan, runDuration, averageHeartRate, photoUrl, runDate } =
       req.body;
     validatePost(distanceRan, runDuration, averageHeartRate, photoUrl, runDate);
@@ -95,7 +166,7 @@ app.post('/api/runs', async (req, res, next) => {
   }
 });
 
-app.put('/api/runs/:runId', async (req, res, next) => {
+app.put('/api/runs/:runId', authMiddleware, async (req, res, next) => {
   try {
     const { runId } = req.params;
     if (!Number.isInteger(+runId) || +runId < 1)
@@ -127,7 +198,7 @@ app.put('/api/runs/:runId', async (req, res, next) => {
   }
 });
 
-app.delete('/api/runs', async (req, res, next) => {
+app.delete('/api/runs', authMiddleware, async (req, res, next) => {
   try {
     const { runId } = req.body;
     if (!Number.isInteger(+runId) || +runId < 1)

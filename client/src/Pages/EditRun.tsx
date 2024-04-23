@@ -9,6 +9,7 @@ import { useState, useEffect, FormEvent } from 'react';
 import { editRun } from '../lib/fetch';
 import { type Run } from '../lib/fetch';
 import { useNavigate, useParams } from 'react-router-dom';
+import { readToken } from '../lib/tokens';
 
 export function EditRun() {
   const [url, setUrl] = useState('/public/placeholderRH.jpg');
@@ -21,7 +22,11 @@ export function EditRun() {
     async function load() {
       try {
         setIsLoading(true);
-        const res = await fetch(`/api/runs/${runId}`);
+        const req = {
+          method: 'GET',
+          headers: { Authorization: `Bearer ${readToken()}` },
+        };
+        const res = await fetch(`/api/runs/${runId}`, req);
         if (!res.ok) throw new Error('Response connection not OK');
         const result = await res.json();
         setRun(result);
@@ -101,7 +106,7 @@ export function EditRun() {
         <FormImage imgUrl={url} />
         <Select onSelectChange={handleSelect} val={url} />
         <DateInput val={run?.runDate} />
-        <Button text="Log Run" />
+        <Button text="Log Run" buttonType="submit" />
       </div>
     </form>
   );

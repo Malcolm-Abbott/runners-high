@@ -14,6 +14,13 @@ export function RunList({ userRuns, updateRuns }: Props) {
   const [isActive, setIsActive] = useState(false);
   const [id, setId] = useState(0);
 
+  if (userRuns.length < 1)
+    return (
+      <div className="my-8">
+        <div className="font-semibold">You currently have no logged runs</div>
+      </div>
+    );
+
   return (
     <>
       <ul className="grid gap-8">
@@ -85,7 +92,11 @@ function Run({ run, setActive, setRunId, idRun }: RunProps) {
       </div>
       <div className="w-96 flex justify-between">
         <LinkButton text="Edit Run" idRun={runId} />
-        <Button text="Delete Run" onDeleteClick={deleteHandler} />
+        <Button
+          text="Delete Run"
+          buttonType="button"
+          onDeleteClick={deleteHandler}
+        />
       </div>
     </li>
   );
