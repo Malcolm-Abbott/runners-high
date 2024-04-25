@@ -29,6 +29,14 @@ Ultimately, I wanted to build something that I could use. As I run every day and
 4. User can delete a run entry
 5. User can create an account
 
+### Preview - Create | Read
+
+![Add A Run Entry](/client/public/runners-high-readme-login-add.gif)
+
+### Preview - Update | Delete
+
+![Edit, Delete A Run Entry](/client/public/runners-high-readme-edit-delete-logout.gif)
+
 ### Features To Come
 
 - User can track their location
