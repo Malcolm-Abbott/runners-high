@@ -12,7 +12,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { readToken } from '../lib/tokens';
 
 export function EditRun() {
-  const [url, setUrl] = useState('/public/placeholderRH.jpg');
+  const [url, setUrl] = useState('/public/placeholder-rh.jpg');
   const [isLoading, setIsLoading] = useState(true);
   const [run, setRun] = useState<Run>();
   const navigate = useNavigate();
@@ -56,7 +56,7 @@ export function EditRun() {
         setUrl(treadmillUrl());
         break;
       default:
-        setUrl('/public/placeholderRH.jpg');
+        setUrl('/public/placeholder-rh.jpg');
     }
   }
 
@@ -82,7 +82,11 @@ export function EditRun() {
   }
 
   if (isLoading)
-    return <div className="grid place-items-center">Loading...</div>;
+    return (
+      <div className="grid place-items-center">
+        <img src="/loading.svg" />
+      </div>
+    );
 
   return (
     <form onSubmit={handleSubmit}>

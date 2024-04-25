@@ -36,7 +36,11 @@ export function Runs() {
   }, []);
 
   if (isLoading)
-    return <div className="grid place-items-center">Loading...</div>;
+    return (
+      <div className="grid place-items-center">
+        <img src="/loading.svg" />
+      </div>
+    );
 
   if (error) {
     console.error('Fetch error:', error);
