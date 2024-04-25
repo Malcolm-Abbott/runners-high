@@ -23,7 +23,10 @@ export function RunList({ userRuns, updateRuns }: Props) {
 
   return (
     <>
-      <ul className="grid gap-8">
+      <ul
+        className={
+          userRuns.length > 1 ? 'grid gap-8 2xl:grid-cols-2' : 'grid gap-8'
+        }>
         {userRuns.map((run) => (
           <Run
             run={run}

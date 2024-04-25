@@ -8,9 +8,10 @@ export function dateToString(runDate: string) {
   return date.toDateString();
 }
 
-export function minutesToHours(minutes: number) {
+export function minutesToHours(minutes: number): string {
   const hours = Math.floor(minutes / 60);
   const mins = minutes % 60;
-  const time = `${hours}:${mins}`;
+  const time =
+    String(mins).length < 2 ? `${hours}:0${mins}` : `${hours}:${mins}`;
   return time;
 }
