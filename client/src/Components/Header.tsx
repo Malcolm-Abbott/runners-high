@@ -1,6 +1,5 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 import { useUser } from '../lib/useUser';
-import { Link } from 'react-router-dom';
 import { BiExit } from 'react-icons/bi';
 import './Header.css';
 

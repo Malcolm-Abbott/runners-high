@@ -6,8 +6,7 @@ import { DateInput } from '../Components/DateInput';
 import { Heading } from '../Components/Heading';
 import { beachUrl, trackUrl, trailUrl, treadmillUrl } from '../lib/locations';
 import { useState, useEffect, FormEvent } from 'react';
-import { editRun } from '../lib/fetch';
-import { type Run } from '../lib/fetch';
+import { editRun, type Run } from '../lib/fetch';
 import { useNavigate, useParams } from 'react-router-dom';
 import { readToken } from '../lib/tokens';
 
