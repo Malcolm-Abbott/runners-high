@@ -10,7 +10,7 @@ export function Header() {
   if (user || token)
     return (
       <>
-        <header className="h-16 flex items-center shadow-md mb-12 w-full">
+        <header className="h-16 flex items-center shadow-md mb-12 w-screen">
           <div className="basis-1/3"></div>
           <h1 className="satisfy-regular text-xl basis-1/3 text-center">
             Runners High
