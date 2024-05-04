@@ -13,6 +13,7 @@ export default {
       'very-dark-green': '#004400',
       'light-gray': '#F1EDED',
       white: '#ffff',
+      red: '#EF0000',
     },
   },
   plugins: [],
