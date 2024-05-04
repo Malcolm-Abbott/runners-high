@@ -5,7 +5,7 @@ import { Button } from '../Components/Button';
 import { DateInput } from '../Components/DateInput';
 import { Heading } from '../Components/Heading';
 import { beachUrl, trackUrl, trailUrl, treadmillUrl } from '../lib/locations';
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, FormEvent, ChangeEvent } from 'react';
 import { editRun, type Run } from '../lib/fetch';
 import { useNavigate, useParams } from 'react-router-dom';
 import { readToken } from '../lib/tokens';
@@ -14,6 +14,8 @@ export function EditRun() {
   const [url, setUrl] = useState('/public/placeholder-rh.jpg');
   const [isLoading, setIsLoading] = useState(true);
   const [run, setRun] = useState<Run>();
+  const [durationMessage, setDurationMessage] = useState('');
+  const [rateMessage, setRateMessage] = useState('');
   const navigate = useNavigate();
   const { runId } = useParams();
 
@@ -59,9 +61,27 @@ export function EditRun() {
     }
   }
 
+  function handleDuration(event: ChangeEvent<HTMLInputElement>): void {
+    if (!Number.isInteger(+event.target.value))
+      setDurationMessage('Run Duration only accepts numeric value');
+    if (Number.isInteger(+event.target.value)) setDurationMessage('');
+  }
+
+  function handleHeartRate(event: ChangeEvent<HTMLInputElement>): void {
+    if (!Number.isInteger(+event.target.value))
+      setRateMessage('Average Heart Rate only accepts numeric values');
+    if (Number.isInteger(+event.target.value)) setRateMessage('');
+  }
+
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     try {
       e.preventDefault();
+      if (durationMessage || rateMessage) {
+        alert(
+          'Run Duration and Average Heart Rate must be numeric values only'
+        );
+        return;
+      }
       const { currentTarget } = e;
       const formData = new FormData(currentTarget);
       const { distanceRan, runDuration, averageHeartRate, runDate } =
@@ -100,11 +120,15 @@ export function EditRun() {
           label="Run Duration"
           category="runDuration"
           val={run?.runDuration}
+          onChange={handleDuration}
+          message={durationMessage}
         />
         <TextInput
           label="Average Heart Rate"
           category="averageHeartRate"
           val={run?.averageHeartRate}
+          onChange={handleHeartRate}
+          message={rateMessage}
         />
         <FormImage imgUrl={url} />
         <Select onSelectChange={handleSelect} val={url} />
