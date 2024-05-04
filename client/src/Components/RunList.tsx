@@ -71,29 +71,29 @@ function Run({ run, setActive, setRunId, idRun }: RunProps) {
   }
 
   return (
-    <li className="container grid place-items-center gap-8 my-8 px-36 py-8 shadow-lg rounded-lg">
+    <li className="container grid place-items-center gap-8 my-8 py-8 px-4 shadow-lg rounded-lg sm:px-36">
       <h1 className="text-center font-semibold text-2xl">
         {dateToString(runDate)}
       </h1>
-      <div className="h-20 border-2 border-solid border-light-green rounded-lg w-96 px-2 grid content-center">
+      <div className="h-20 border-2 border-solid border-light-green rounded-lg w-80 px-2 grid content-center sm:w-96">
         <p className="font-bold underline px-4">Distance Ran</p>
         <p className="font-medium px-5">{distanceRan}</p>
       </div>
-      <div className="h-20 border-2 border-solid border-light-green rounded-lg w-96 px-2 grid content-center">
+      <div className="h-20 border-2 border-solid border-light-green rounded-lg w-80 px-2 grid content-center sm:w-96">
         <p className="font-bold underline px-4">Run Duration</p>
         <p className="font-medium px-5">{minutesToHours(runDuration)}</p>
       </div>
-      <div className="h-20 border-2 border-solid border-light-green rounded-lg w-96 px-2 grid content-center">
+      <div className="h-20 border-2 border-solid border-light-green rounded-lg w-80 px-2 grid content-center sm:w-96">
         <p className="font-bold underline px-4">Average Heart Rate</p>
         <p className="font-medium px-5">{averageHeartRate}</p>
       </div>
       <div>
         <span className="px-2 font-bold">Photo</span>
-        <div className="border-2 border-solid border-light-green rounded-lg w-96">
+        <div className="border-2 border-solid border-light-green rounded-lg w-80 sm:w-96">
           <img className="rounded-md" src={photoUrl} />
         </div>
       </div>
-      <div className="w-96 flex justify-between">
+      <div className="w-80 flex justify-between sm:w-96">
         <LinkButton text="Edit Run" idRun={runId} />
         <Button
           text="Delete Run"
