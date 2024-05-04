@@ -10,7 +10,7 @@ export function Button({ text, onDeleteClick, buttonType }: Props) {
     <button
       onClick={onDeleteClick}
       type={buttonType}
-      className="bg-light-green border-2 border-solid border-light-green rounded-lg h-12 w-40 shadow-xl ring-2 ring-dark-green font-medium">
+      className="bg-light-green border-2 border-solid border-light-green rounded-lg h-12 w-36 shadow-xl ring-2 ring-dark-green font-medium sm:w-40">
       {text}
     </button>
   );
