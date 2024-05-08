@@ -71,7 +71,7 @@ function Run({ run, setActive, setRunId, idRun }: RunProps) {
   }
 
   return (
-    <li className="container grid place-items-center gap-8 my-8 py-8 px-4 shadow-lg rounded-lg sm:px-36">
+    <li className="container grid place-items-center gap-8 my-8 py-8 px-4 shadow-3xl rounded-lg sm:px-36">
       <h1 className="text-center font-semibold text-2xl">
         {dateToString(runDate)}
       </h1>

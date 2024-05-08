@@ -8,7 +8,7 @@ type Props = {
 export function Heading({ title, icon }: Props) {
   return (
     <>
-      <h1 className="text-center font-semibold text-2xl flex items-center">
+      <h1 className="text-center font-semibold text-2xl flex items-center mb-4">
         {title} {icon}
       </h1>
     </>
